@@ -1,0 +1,73 @@
+package beevacay;
+
+// The configuration consumed by beevacay.py.
+// All fields are required.
+message BeevacayConfig {
+  repeated VacationEntry vacation_entry = 1;
+  optional string username = 2;
+}
+
+// A set of Beeminder goals and VacationPatterns to apply to them.
+// All fields are required.
+message VacationEntry {
+  repeated string goalname = 1;
+  repeated VacationPattern vacation_pattern = 2;
+}
+
+// Describes a premeditated adjustment to a Beeminder goal, similar to
+// the Take a Break feature in the UI. The term "vacation" corresponds to one
+// use case, but several varieties are possible. See the examples file for
+// ideas.
+// No fields are required, although if you omit everything you'll get a
+// flat road forever. (FIXME?)
+message VacationPattern {
+  enum Weekday {
+      MONDAY = 0;
+      TUESDAY = 1;
+      WEDNESDAY = 2;
+      THURSDAY = 3;
+      FRIDAY = 4;
+      SATURDAY = 5;
+      SUNDAY = 6;
+    }
+  enum TotalHandling {
+      DISCARD_TOTALS = 0;
+      REACH_TOTAL_AFTER_VACATION = 1;
+      REACH_TOTAL_BEFORE_VACATION = 2;
+    }
+
+  // First day to enforce the vacation. If missing, start 7 days from now.
+  // Format: %Y-%m-%d
+  // Must be less than end_date if both are specified.
+  optional string start_date = 1;
+
+  // Last day to enforce the vacation. If missing, end 1 year from today.
+  // Format: %Y-%m-%d
+  // Must be greater than start_date if both are specified.
+  optional string end_date = 2;
+
+  // Last day to enforce the vacation as a number of days after today.
+  // This is useful because edits to the Road Dial in the Beeminder UI only
+  // affect the last segment of road, which makes pre-loading your road with
+  // a year's worth of vacations suboptimal.
+  // It is legal to specify both this and end_date, in which case the sooner
+  // of the two is the effective end date. If start_date is specified and is
+  // later than this, the VacationPattern is ignored.
+  // If missing, don't constrain the end date in this way.
+  optional int32 relative_end_date_days = 3 [default = 14];
+
+  // First day to enforce the vacation as a number of days after today.
+  // This is useful because bogus edits within the akrasia horizon require
+  // Beeminder's support team to fix. If you think you know what you're doing
+  // and you really want to make your yellow brick road harder within the
+  // horizon, you can set this parameter lower than 7.
+  optional int32 relative_start_date_days = 7 [default = 7];
+
+  // Include only days of the week specified. If missing, exclude no days.
+  repeated Weekday specific_weekday = 4;
+
+  // The goal's new rate during this vacation. If missing, use default.
+  optional int32 goal_rate = 5 [default = 0];
+
+  optional TotalHandling total_handling = 6 [default = REACH_TOTAL_BEFORE_VACATION];
+}
