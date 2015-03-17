@@ -1,0 +1,11 @@
+username: "drtall"
+
+# Mark some goals as weekdays only.
+vacation_entry {
+  goalname: "testroadall2"
+
+  vacation_pattern {
+    specific_weekday: SATURDAY
+    specific_weekday: SUNDAY
+  }
+}

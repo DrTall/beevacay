@@ -1,0 +1,45 @@
+username: "busy_bee"
+
+# Mark some goals as weekdays only.
+vacation_entry {
+  goalname: "goal1"
+  goalname: "goal2"
+
+  vacation_pattern {
+    specific_weekday: SATURDAY
+    specific_weekday: SUNDAY
+    relative_end_date_days: 14
+  }
+}
+
+# Schedule some time out of town
+vacation_entry {
+  goalname: "goal1"
+  goalname: "goal2"
+
+  vacation_pattern {
+    start_date: "2015-2-3"
+    end_date: "2015-03-01"
+    relative_end_date_days: 14
+  }
+
+  vacation_pattern {
+    start_date: "2015-10-01"
+    end_date: "2015-10-11"
+    relative_end_date_days: 14
+  }
+}
+
+# Make this goal harder on Thursdays this April.
+vacation_entry {
+  goalname: "goal1"
+  goalname: "goal2"
+
+  vacation_pattern {
+    start_date: "2015-4-1"
+    end_date: "2015-4-30"
+    specific_weekday: THURSDAY
+    goal_rate: 10
+    relative_end_date_days: 365
+  }
+}
